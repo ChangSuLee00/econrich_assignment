@@ -5,12 +5,14 @@ import { AllExceptionFiller } from './common/exception/exception.filter';
 import { winstonLogger } from './common/utils/logger.winston';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ValidationPipe } from '@nestjs/common';
+import helmet from 'helmet';
 
 async function bootstrap() {
   dotenv.config();
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     logger: winstonLogger,
   });
+  app.use(helmet());
   app.enableCors({
     origin: true,
     credentials: true,
