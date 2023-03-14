@@ -12,7 +12,7 @@ export class EmployeeRepository {
       const result = await this.connection.query(query);
       return result;
     } catch (error) {
-      throw new NotFoundException('error while finding alarm');
+      throw new NotFoundException('error while find employee');
       // 페이지 또는 파일을 찾을 수 없음 404
     }
   }
