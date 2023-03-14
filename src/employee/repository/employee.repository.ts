@@ -1,11 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Connection } from 'typeorm';
+import { EmployeeFindOne } from '../interfaces/findOne.type';
 
 @Injectable()
 export class EmployeeRepository {
   constructor(private readonly connection: Connection) {}
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<EmployeeFindOne> {
     try {
       const query = `SELECT * FROM employees WHERE employee_id = ${id}`;
       const result = await this.connection.query(query);
