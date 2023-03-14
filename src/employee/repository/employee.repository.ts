@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Connection } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { EmployeeFindOne } from '../interfaces/findOne.type';
 
 @Injectable()
 export class EmployeeRepository {
-  constructor(private readonly connection: Connection) {}
+  constructor(private readonly connection: DataSource) {}
 
   async findOne(id: number): Promise<EmployeeFindOne> {
     try {
