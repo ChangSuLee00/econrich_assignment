@@ -11,6 +11,10 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     logger: winstonLogger,
   });
+  app.enableCors({
+    origin: true,
+    credentials: true,
+  });
   app.useGlobalFilters(new AllExceptionFiller(winstonLogger));
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(5000);
