@@ -3,10 +3,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
+import { EmployeeModule } from './employee/employee.module';
 import ormconfig from './ormconfig';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(ormconfig)],
+  imports: [TypeOrmModule.forRoot(ormconfig), EmployeeModule],
   controllers: [AppController],
   providers: [AppService],
 })
