@@ -5,6 +5,7 @@ import { DepartmentRepository } from '../repository/employee.repository';
 
 const mockDepartmentRepository = () => ({
   findOne: jest.fn(),
+  findLocation: jest.fn(),
 });
 
 describe('DepartmentService', () => {
@@ -24,8 +25,8 @@ describe('DepartmentService', () => {
       module.get<DepartmentRepository>(DepartmentRepository);
   });
 
-  describe('FindEmployee', () => {
-    it('직원 찾기 성공', async () => {
+  describe('FindDepartment', () => {
+    it('부서 찾기 성공', async () => {
       const id = 100;
       // Method Mocking
       (spyDepartmentRepository.findOne as jest.Mock).mockReturnValue({
@@ -41,7 +42,7 @@ describe('DepartmentService', () => {
       });
     });
 
-    it('직원 찾기 실패', async () => {
+    it('부서 찾기 실패', async () => {
       const id = 99;
       // Method Mocking
       (spyDepartmentRepository.findOne as jest.Mock).mockRejectedValue(
@@ -50,6 +51,40 @@ describe('DepartmentService', () => {
       try {
         // Excuute
         const result = await spyDepartmentService.findOne(id);
+      } catch (error) {
+        // Expect
+        expect(error).toBeTruthy;
+        expect(error).toBeInstanceOf(NotFoundException);
+      }
+    });
+  });
+
+  describe('FindLocation', () => {
+    it('부서 위치 찾기 성공', async () => {
+      const id = 10;
+      // Method Mocking
+      (spyDepartmentRepository.findLocation as jest.Mock).mockReturnValue({
+        location_id: 10,
+      });
+      // Excuute
+      const result = await spyDepartmentService.findLocation(id);
+      // Expect
+      expect(spyDepartmentRepository.findLocation).toBeCalled();
+      expect(spyDepartmentRepository.findLocation).toBeCalledWith(id);
+      expect(result).toEqual({
+        location_id: 10,
+      });
+    });
+
+    it('부서 위치 찾기 실패', async () => {
+      const id = 11;
+      // Method Mocking
+      (spyDepartmentRepository.findLocation as jest.Mock).mockRejectedValue(
+        new NotFoundException(),
+      );
+      try {
+        // Excuute
+        const result = await spyDepartmentService.findLocation(id);
       } catch (error) {
         // Expect
         expect(error).toBeTruthy;
