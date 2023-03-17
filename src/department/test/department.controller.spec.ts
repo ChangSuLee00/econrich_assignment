@@ -1,4 +1,7 @@
-import { NotFoundException } from '@nestjs/common';
+import {
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DepartmentController } from '../department.controller';
 import { DepartmentService } from '../department.service';
@@ -17,6 +20,14 @@ const mockDepartmentService = () => ({
       return [{ location_id: 10 }];
     } else {
       return NotFoundException;
+    }
+  }),
+
+  updateSalary: jest.fn((id, body) => {
+    if (id === 10 && body.upper) {
+      return { status: 200, success: true };
+    } else {
+      return InternalServerErrorException;
     }
   }),
 });
@@ -86,6 +97,47 @@ describe('DepartmentController', () => {
       expect(spyDepartmentService.findLocation).toBeCalled();
       expect(spyDepartmentService.findLocation).toBeCalledWith(id);
       expect(response).toEqual(NotFoundException);
+    });
+  });
+
+  describe('UpdateSalary', () => {
+    it('급여 인상 성공', async () => {
+      const id = 10;
+      const body = { upper: '10' };
+
+      // Excute
+      const response = await controller.updateSalary(id, body);
+
+      // Expect
+      expect(spyDepartmentService.updateSalary).toBeCalled();
+      expect(spyDepartmentService.updateSalary).toBeCalledWith(id, body);
+      expect(response).toEqual({ status: 200, success: true });
+    });
+
+    it('급여 인상 실패(id 없음)', async () => {
+      const id = 11;
+      const body = { upper: '10' };
+
+      // Excute
+      const response = await controller.updateSalary(id, body);
+
+      // Expect
+      expect(spyDepartmentService.updateSalary).toBeCalled();
+      expect(spyDepartmentService.updateSalary).toBeCalledWith(id, body);
+      expect(response).toEqual(InternalServerErrorException);
+    });
+
+    it('급여 인상 실패(body.upper 없음)', async () => {
+      const id = 10;
+      const body = { upper: null };
+
+      // Excute
+      const response = await controller.updateSalary(id, body);
+
+      // Expect
+      expect(spyDepartmentService.updateSalary).toBeCalled();
+      expect(spyDepartmentService.updateSalary).toBeCalledWith(id, body);
+      expect(response).toEqual(InternalServerErrorException);
     });
   });
 });
