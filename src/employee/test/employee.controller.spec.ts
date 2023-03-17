@@ -11,6 +11,14 @@ const mockEmployeeService = () => ({
       return NotFoundException;
     }
   }),
+
+  findOneHistory: jest.fn((id) => {
+    if (id === 101) {
+      return [{ employee_id: 101 }];
+    } else {
+      return NotFoundException;
+    }
+  }),
 });
 
 describe('EmployeeController', () => {
@@ -51,6 +59,32 @@ describe('EmployeeController', () => {
       // Expect
       expect(spyEmployeeService.findOne).toBeCalled();
       expect(spyEmployeeService.findOne).toBeCalledWith(id);
+      expect(response).toEqual(NotFoundException);
+    });
+  });
+
+  describe('FindEmployeeHistory', () => {
+    it('직원 이력 찾기 성공', async () => {
+      const id = 101;
+
+      // Excute
+      const response = await controller.findOneHistory(id);
+
+      // Expect
+      expect(spyEmployeeService.findOneHistory).toBeCalled();
+      expect(spyEmployeeService.findOneHistory).toBeCalledWith(id);
+      expect(response).toEqual([{ employee_id: 101 }]);
+    });
+
+    it('직원 이력 찾기 실패', async () => {
+      const id = 100;
+
+      // Excute
+      const response = await controller.findOneHistory(id);
+
+      // Expect
+      expect(spyEmployeeService.findOneHistory).toBeCalled();
+      expect(spyEmployeeService.findOneHistory).toBeCalledWith(id);
       expect(response).toEqual(NotFoundException);
     });
   });

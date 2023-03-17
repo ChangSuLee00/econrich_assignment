@@ -56,4 +56,38 @@ describe('EmployeeService', () => {
       }
     });
   });
+
+  describe('FindEmployeeHistory', () => {
+    it('직원 이력 찾기 성공', async () => {
+      const id = 101;
+      // Method Mocking
+      (spyEmployeeRepository.findOne as jest.Mock).mockReturnValue({
+        employee_id: 101,
+      });
+      // Excuute
+      const result = await spyEmployeeService.findOne(id);
+      // Expect
+      expect(spyEmployeeRepository.findOne).toBeCalled();
+      expect(spyEmployeeRepository.findOne).toBeCalledWith(id);
+      expect(result).toEqual({
+        employee_id: 101,
+      });
+    });
+
+    it('직원 이력 찾기 실패', async () => {
+      const id = 100;
+      // Method Mocking
+      (spyEmployeeRepository.findOne as jest.Mock).mockRejectedValue(
+        new NotFoundException(),
+      );
+      try {
+        // Excuute
+        const result = await spyEmployeeService.findOne(id);
+      } catch (error) {
+        // Expect
+        expect(error).toBeTruthy;
+        expect(error).toBeInstanceOf(NotFoundException);
+      }
+    });
+  });
 });
