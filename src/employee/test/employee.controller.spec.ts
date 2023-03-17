@@ -1,4 +1,7 @@
-import { NotFoundException } from '@nestjs/common';
+import {
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { EmployeeController } from '../employee.controller';
 import { EmployeeService } from '../employee.service';
@@ -17,6 +20,14 @@ const mockEmployeeService = () => ({
       return [{ employee_id: 101 }];
     } else {
       return NotFoundException;
+    }
+  }),
+
+  updateOne: jest.fn((id, body) => {
+    if (id !== 101 || Object.keys(body).length === 0) {
+      return InternalServerErrorException;
+    } else {
+      return { status: 200, success: true };
     }
   }),
 });
@@ -86,6 +97,47 @@ describe('EmployeeController', () => {
       expect(spyEmployeeService.findOneHistory).toBeCalled();
       expect(spyEmployeeService.findOneHistory).toBeCalledWith(id);
       expect(response).toEqual(NotFoundException);
+    });
+  });
+
+  describe('UpdateEmployee', () => {
+    it('직원 업데이트 성공', async () => {
+      const id = 101;
+      const body = { first_name: 'Steven' };
+
+      // Excute
+      const response = await controller.updateOne(id, body);
+
+      // Expect
+      expect(spyEmployeeService.updateOne).toBeCalled();
+      expect(spyEmployeeService.updateOne).toBeCalledWith(id, body);
+      expect(response).toEqual({ status: 200, success: true });
+    });
+
+    it('직원 업데이트 실패(유저 id 없음)', async () => {
+      const id = null;
+      const body = { first_name: 'Steven' };
+
+      // Excute
+      const response = await controller.updateOne(id, body);
+
+      // Expect
+      expect(spyEmployeeService.updateOne).toBeCalled();
+      expect(spyEmployeeService.updateOne).toBeCalledWith(id, body);
+      expect(response).toEqual(InternalServerErrorException);
+    });
+
+    it('직원 업데이트 실패(body 내용 없음)', async () => {
+      const id = 101;
+      const body = {};
+
+      // Excute
+      const response = await controller.updateOne(id, body);
+
+      // Expect
+      expect(spyEmployeeService.updateOne).toBeCalled();
+      expect(spyEmployeeService.updateOne).toBeCalledWith(id, body);
+      expect(response).toEqual(InternalServerErrorException);
     });
   });
 });
