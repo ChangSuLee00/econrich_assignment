@@ -1,7 +1,15 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+} from '@nestjs/common';
 import { DepartmentService } from './department.service';
 import { DepartmentFindOne } from './interfaces/findDept.type';
 import { DepartmentFindLocation } from './interfaces/findDeptLocation.type';
+import { DepartmentUpdateSalary } from './interfaces/updateDeptSalary.type';
 
 @Controller('department')
 export class DepartmentController {
@@ -17,5 +25,13 @@ export class DepartmentController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<DepartmentFindLocation> {
     return this.departmentService.findLocation(id);
+  }
+
+  @Patch(':id')
+  updateSalary(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: DepartmentUpdateSalary,
+  ): Promise<{ status: number; success: boolean }> {
+    return this.departmentService.updateSalary(id, body);
   }
 }
