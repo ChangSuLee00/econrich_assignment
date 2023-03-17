@@ -1,11 +1,12 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { DataSource } from 'typeorm';
+import { SidoName } from '../interfaces/sidoName.type';
 
 @Injectable()
 export class AirRepository {
   constructor(private readonly connection: DataSource) {}
 
-  async findAirBySidoName(sidoName: string): Promise<any> {
+  async findAirBySidoName(query: SidoName): Promise<any> {
     try {
     } catch (error) {
       throw new InternalServerErrorException('error while find air condition');
