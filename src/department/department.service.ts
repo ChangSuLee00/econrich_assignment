@@ -5,7 +5,8 @@ import { DepartmentRepository } from './repository/employee.repository';
 export class DepartmentService {
   constructor(private readonly departmentRepository: DepartmentRepository) {}
 
-  findOne(id: number) {
-    return `This action returns a #${id} department`;
+  async findOne(id: number) {
+    const department = await this.departmentRepository.findOne(id);
+    return department;
   }
 }
