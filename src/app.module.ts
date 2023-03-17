@@ -5,10 +5,11 @@ import { AppService } from './app.service';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { EmployeeModule } from './employee/employee.module';
 import { DepartmentModule } from './department/department.module';
+import { AirModule } from './air/air.module';
 import ormconfig from './ormconfig';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(ormconfig), EmployeeModule, DepartmentModule],
+  imports: [TypeOrmModule.forRoot(ormconfig), EmployeeModule, DepartmentModule, AirModule],
   controllers: [AppController],
   providers: [AppService],
 })
