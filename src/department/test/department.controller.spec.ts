@@ -11,6 +11,14 @@ const mockDepartmentService = () => ({
       return NotFoundException;
     }
   }),
+
+  findLocation: jest.fn((id) => {
+    if (id === 10) {
+      return [{ location_id: 10 }];
+    } else {
+      return NotFoundException;
+    }
+  }),
 });
 
 describe('DepartmentController', () => {
@@ -51,6 +59,32 @@ describe('DepartmentController', () => {
       // Expect
       expect(spyDepartmentService.findOne).toBeCalled();
       expect(spyDepartmentService.findOne).toBeCalledWith(id);
+      expect(response).toEqual(NotFoundException);
+    });
+  });
+
+  describe('FindLocation', () => {
+    it('부서 위치 찾기 성공', async () => {
+      const id = 10;
+
+      // Excute
+      const response = await controller.findLocation(id);
+
+      // Expect
+      expect(spyDepartmentService.findLocation).toBeCalled();
+      expect(spyDepartmentService.findLocation).toBeCalledWith(id);
+      expect(response).toEqual([{ location_id: 10 }]);
+    });
+
+    it('부서 위치 찾기 실패', async () => {
+      const id = 11;
+
+      // Excute
+      const response = await controller.findLocation(id);
+
+      // Expect
+      expect(spyDepartmentService.findLocation).toBeCalled();
+      expect(spyDepartmentService.findLocation).toBeCalledWith(id);
       expect(response).toEqual(NotFoundException);
     });
   });
