@@ -29,7 +29,7 @@ export class EmployeeRepository {
       const result = await this.connection.query(query);
       return result;
     } catch (error) {
-      throw new NotFoundException('error while find employee');
+      throw new NotFoundException('error while find employee history');
       // 페이지 또는 파일을 찾을 수 없음 404
     }
   }
@@ -52,7 +52,7 @@ export class EmployeeRepository {
       const result = await this.connection.query(query);
       return result;
     } catch (error) {
-      throw new InternalServerErrorException('error while saving box');
+      throw new InternalServerErrorException('error while update employee');
       // 내부 서버 에러 500
     }
   }
