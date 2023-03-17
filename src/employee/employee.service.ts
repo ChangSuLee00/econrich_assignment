@@ -9,4 +9,9 @@ export class EmployeeService {
     const employee = await this.employeeRepository.findOne(id);
     return employee;
   }
+
+  async findOneHistory(id: number) {
+    const employeeHistory = await this.employeeRepository.findOneHistory(id);
+    return employeeHistory;
+  }
 }
