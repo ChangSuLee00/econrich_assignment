@@ -1,20 +1,57 @@
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DepartmentController } from '../department.controller';
 import { DepartmentService } from '../department.service';
 
+const mockDepartmentService = () => ({
+  findOne: jest.fn((id) => {
+    if (id === 10) {
+      return [{ department_id: 10 }];
+    } else {
+      return NotFoundException;
+    }
+  }),
+});
+
 describe('DepartmentController', () => {
   let controller: DepartmentController;
+  let spyDepartmentService: DepartmentService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [DepartmentController],
-      providers: [DepartmentService],
+      providers: [
+        { provide: DepartmentService, useFactory: mockDepartmentService },
+      ],
     }).compile();
 
     controller = module.get<DepartmentController>(DepartmentController);
+    spyDepartmentService = module.get<DepartmentService>(DepartmentService);
   });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
+  describe('FindDepartment', () => {
+    it('부서 찾기 성공', async () => {
+      const id = 10;
+
+      // Excute
+      const response = await controller.findOne(id);
+
+      // Expect
+      expect(spyDepartmentService.findOne).toBeCalled();
+      expect(spyDepartmentService.findOne).toBeCalledWith(id);
+      expect(response).toEqual([{ department_id: 10 }]);
+    });
+
+    it('부서 찾기 실패', async () => {
+      const id = 11;
+
+      // Excute
+      const response = await controller.findOne(id);
+
+      // Expect
+      expect(spyDepartmentService.findOne).toBeCalled();
+      expect(spyDepartmentService.findOne).toBeCalledWith(id);
+      expect(response).toEqual(NotFoundException);
+    });
   });
 });
