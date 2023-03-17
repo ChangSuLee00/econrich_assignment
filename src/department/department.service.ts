@@ -9,4 +9,9 @@ export class DepartmentService {
     const department = await this.departmentRepository.findOne(id);
     return department;
   }
+
+  async findLocation(id: number) {
+    const location = await this.departmentRepository.findLocation(id);
+    return location;
+  }
 }
