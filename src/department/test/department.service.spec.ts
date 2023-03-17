@@ -1,4 +1,7 @@
-import { NotFoundException } from '@nestjs/common';
+import {
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DepartmentService } from '../department.service';
 import { DepartmentRepository } from '../repository/employee.repository';
@@ -6,6 +9,7 @@ import { DepartmentRepository } from '../repository/employee.repository';
 const mockDepartmentRepository = () => ({
   findOne: jest.fn(),
   findLocation: jest.fn(),
+  updateSalary: jest.fn(),
 });
 
 describe('DepartmentService', () => {
@@ -89,6 +93,58 @@ describe('DepartmentService', () => {
         // Expect
         expect(error).toBeTruthy;
         expect(error).toBeInstanceOf(NotFoundException);
+      }
+    });
+  });
+
+  describe('UpdateSalary', () => {
+    it('급여 인상 성공', async () => {
+      const id = 10;
+      const body = { upper: '10' };
+      // Method Mocking
+      (spyDepartmentRepository.updateSalary as jest.Mock).mockReturnValue({
+        status: 200,
+        success: true,
+      });
+      // Excuute
+      const result = await spyDepartmentService.updateSalary(id, body);
+      // Expect
+      expect(spyDepartmentRepository.updateSalary).toBeCalled();
+      expect(spyDepartmentRepository.updateSalary).toBeCalledWith(id, body);
+      expect(result).toEqual({ status: 200, success: true });
+    });
+
+    it('급여 인상 실패(id 없음)', async () => {
+      const id = 11;
+      const body = { upper: '10' };
+      // Method Mocking
+      (spyDepartmentRepository.updateSalary as jest.Mock).mockRejectedValue(
+        new InternalServerErrorException(),
+      );
+      try {
+        // Excuute
+        const result = await spyDepartmentService.updateSalary(id, body);
+      } catch (error) {
+        // Expect
+        expect(error).toBeTruthy;
+        expect(error).toBeInstanceOf(InternalServerErrorException);
+      }
+    });
+
+    it('급여 인상 실패(body.upper 없음)', async () => {
+      const id = 10;
+      const body = { upper: null };
+      // Method Mocking
+      (spyDepartmentRepository.updateSalary as jest.Mock).mockRejectedValue(
+        new InternalServerErrorException(),
+      );
+      try {
+        // Excuute
+        const result = await spyDepartmentService.updateSalary(id, body);
+      } catch (error) {
+        // Expect
+        expect(error).toBeTruthy;
+        expect(error).toBeInstanceOf(InternalServerErrorException);
       }
     });
   });
