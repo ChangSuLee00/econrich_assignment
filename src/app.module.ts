@@ -9,7 +9,12 @@ import { AirModule } from './air/air.module';
 import ormconfig from './ormconfig';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(ormconfig), EmployeeModule, DepartmentModule, AirModule],
+  imports: [
+    TypeOrmModule.forRoot(ormconfig),
+    EmployeeModule,
+    DepartmentModule,
+    AirModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
