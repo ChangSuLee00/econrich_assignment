@@ -1,7 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { DepartmentFindOne } from '../interfaces/findDept.type';
 import { DepartmentFindLocation } from '../interfaces/findDeptLocation.type';
+import { DepartmentUpdateSalary } from '../interfaces/updateDeptSalary.type';
 
 @Injectable()
 export class DepartmentRepository {
@@ -29,6 +34,25 @@ export class DepartmentRepository {
       return result;
     } catch (error) {
       throw new NotFoundException('error while find department location');
+      // 페이지 또는 파일을 찾을 수 없음 404
+    }
+  }
+
+  async updateSalary(
+    id: number,
+    body: DepartmentUpdateSalary,
+  ): Promise<{ status: number; success: boolean }> {
+    const percentage = 1 + Number(body.upper) / 100;
+    try {
+      const query = `UPDATE employees
+      SET salary = salary * ${percentage}
+      WHERE department_id = ${id}`;
+      const result = await this.connection.query(query);
+      return result;
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'error while update department salary',
+      );
       // 페이지 또는 파일을 찾을 수 없음 404
     }
   }
