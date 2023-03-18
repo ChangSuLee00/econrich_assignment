@@ -30,6 +30,12 @@ https://documenter.getpostman.com/view/25353027/2s93Juu3eA
 
 https://www.cslee0112.com
 
+# HTTPS 통신 구현
+
+<img width="172" alt="image" src="https://user-images.githubusercontent.com/98637739/226098826-033fe6b3-bb8b-4f4d-8803-82be8bf3d927.png">
+
+Nginx와 Certbot을 이용해 HTTPS 통신을 구현 했습니다.
+
 # Test
 
 1. Unit test
