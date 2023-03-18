@@ -1,3 +1,27 @@
+# 사용 기술
+
+Nest.js
+
+1. Typescript 친화적으로 서비스를 구성하였고, Interfaces파일에 리턴 타입, 입력 타입을 별도로 지정 했습니다.
+
+2. AOP(pipe-filter, middleware등) 패턴을 통해 logger, middleware, exception filter를 설치 했습니다.
+
+3. Module 패턴으로 파일을 보기 쉽게 정리 했습니다.
+
+4. 클린 아키텍쳐의 DI원칙을 지키기 위해 Repository를 설치하고 Service에 주입하여 사용 했습니다.
+
+5. Unit test, e2e Test를 시행해가며 서비스를 구축 했습니다.
+
+AWS EC2
+
+AWS RDS
+
+Nginx
+
+Certbot
+
+PM2
+
 # API 명세서
 
 https://documenter.getpostman.com/view/25353027/2s93Juu3eA
